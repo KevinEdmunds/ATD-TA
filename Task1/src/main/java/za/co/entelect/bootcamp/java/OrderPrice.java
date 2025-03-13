@@ -1,6 +1,7 @@
+package za.co.entelect.bootcamp.java;
+
 import java.time.LocalDateTime;
 import java.util.LinkedList;
-import java.util.Queue;
 
 public class OrderPrice {
     public LinkedList<Order> orderPriceList = new LinkedList<Order>();

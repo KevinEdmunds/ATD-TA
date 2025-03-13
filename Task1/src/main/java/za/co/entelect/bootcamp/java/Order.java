@@ -1,3 +1,5 @@
+package za.co.entelect.bootcamp.java;
+
 import java.time.LocalDateTime;
 
 public class Order {

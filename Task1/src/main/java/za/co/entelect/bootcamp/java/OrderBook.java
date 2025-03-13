@@ -1,3 +1,5 @@
+package za.co.entelect.bootcamp.java;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,7 +9,7 @@ import java.util.Objects;
 
 public class OrderBook {
     private static LinkedList<OrderPrice> buyOrderBook = new LinkedList<OrderPrice>();
-    private LinkedList<OrderPrice> sellOrderBook = new LinkedList<OrderPrice>();
+    private static LinkedList<OrderPrice> sellOrderBook = new LinkedList<OrderPrice>();
     public static int orderId=0;
 
     public static void main(String[] args) throws IOException {
@@ -33,23 +35,33 @@ public class OrderBook {
         BufferedReader r = new BufferedReader(
                 new InputStreamReader(System.in));
 
-        System.out.print("Order ID: ");
+        System.out.print("za.co.entelect.bootcamp.java.Order ID: ");
         int id = Integer.parseInt(r.readLine());
 
         System.out.print("Quantity change: ");
         int quantity = Integer.parseInt(r.readLine());
 
-        Modify(id, quantity);
+        System.out.print("Side: ");
+        String side = r.readLine();
+
+        if(side=="Buy"){
+
+        }
+        Modify(id, quantity, side);
     }
 
 
     private static void DeleteOrderDetails() throws IOException {
         BufferedReader r = new BufferedReader(
                 new InputStreamReader(System.in));
-
+        System.out.print("za.co.entelect.bootcamp.java.Order ID: ");
         int id = Integer.parseInt(r.readLine());
 
-        Delete(id);
+        System.out.print("Side: ");
+        String side = r.readLine();
+
+
+        Delete(id, side);
     }
 
     private static void AddOrderDetails() throws IOException {
@@ -67,14 +79,29 @@ public class OrderBook {
         String side = r.readLine();
 
         Order newOrder = new Order(orderId, price, quantity,side, LocalDateTime.now());
-        Add(newOrder);
+        Add(newOrder, side);
+
+        LinkedList<OrderPrice> orderSide;
+        if(Objects.equals(side, "Buy"))
+        {
+            orderSide=buyOrderBook;
+        }else{
+            orderSide=sellOrderBook;
+        }
         orderId++;
-        PrintOrderList();
+        PrintOrderList(orderSide);
     }
 
-    public static void Modify(int id, int quantity){
+    public static void Modify(int id, int quantity, String side){
         int index = 0;
-        for(OrderPrice orderPrice: buyOrderBook){
+        LinkedList<OrderPrice> orderSide;
+        if(Objects.equals(side, "Buy"))
+        {
+            orderSide=buyOrderBook;
+        }else{
+            orderSide=sellOrderBook;
+        }
+        for(OrderPrice orderPrice: orderSide){
             index = orderPrice.FindOrderByID(id);
             if(index!=-1)
             {
@@ -82,12 +109,19 @@ public class OrderBook {
                 break;
             }
         }
-        PrintOrderList();
+        PrintOrderList(orderSide);
     }
 
-    public static void Delete(int id) {
+    public static void Delete(int id, String side ) {
         int index = 0;
-        for(OrderPrice orderPrice: buyOrderBook){
+        LinkedList<OrderPrice> orderSide;
+        if(Objects.equals(side, "Buy"))
+        {
+            orderSide=buyOrderBook;
+        }else{
+            orderSide=sellOrderBook;
+        }
+        for(OrderPrice orderPrice: orderSide){
            index = orderPrice.FindOrderByID(id);
             if(index!=-1)
             {
@@ -95,56 +129,45 @@ public class OrderBook {
                 break;
             }
         }
-        PrintOrderList();
-        System.out.println("This is the item to delete: " +index );
+        PrintOrderList(orderSide);
     }
 
-    public static void Add(Order newOrder){
+    public static void Add(Order newOrder, String side){
         float price = newOrder.orderPrice;
-        //System.out.println("Adding item");
-
-        if(Objects.equals(newOrder.orderSide, "Buy")) {
-            //System.out.println("Buy order");
-            if(buyOrderBook.isEmpty())
-            {
-                buyOrderBook.add(CreateNewOrderPrice(newOrder));
-               //System.out.println("This is a new order");
-                return;
-            }
-            if(price>buyOrderBook.getLast().orderPrice)
-            {
-                buyOrderBook.addLast(CreateNewOrderPrice(newOrder));
-                //System.out.println("The new biggest entry");
-                return;
-            }else if(price<buyOrderBook.getFirst().orderPrice)
-            {
-                buyOrderBook.addFirst(CreateNewOrderPrice(newOrder));
-                //System.out.println("The new smallest entry");
-                return;
-            }else{
-                //System.out.println("Running in the for loop");
-                for(int i=0; i<buyOrderBook.size();i++)
-                {
-
-                    float currentOrderPrice = buyOrderBook.get(i).orderPrice;
-                    //System.out.println("Current price :" + currentOrderPrice +"Expected price: " + price );
-                    if(price==currentOrderPrice){
-                        buyOrderBook.get(i).AddOrder(newOrder);
-                        //System.out.println("Order added to an existing table");
-                        return;
-                    }
-                    else if(price<currentOrderPrice){
-                        buyOrderBook.add(i, CreateNewOrderPrice(newOrder));
-                        //System.out.println("No entry for this value, creating new entry");
-                        return;
-                    }
-                }
-                buyOrderBook.addLast(CreateNewOrderPrice(newOrder));
-            }//System.out.println("This is a buy order");
-        }else if(Objects.equals(newOrder.orderSide, "Sell")){
-            System.out.println("This is a sell order");
+        LinkedList<OrderPrice> orderSide;
+        if(Objects.equals(newOrder.orderSide, "Buy"))
+        {
+            orderSide=buyOrderBook;
         }else{
-            System.out.println("Error: Side is not valid");
+            orderSide=sellOrderBook;
+        }
+        if(orderSide.isEmpty())
+        {
+            orderSide.add(CreateNewOrderPrice(newOrder));
+            return;
+        }
+        if(price>orderSide.getLast().orderPrice)
+        {
+            orderSide.addLast(CreateNewOrderPrice(newOrder));
+            return;
+        }else if(price<orderSide.getFirst().orderPrice)
+        {
+            orderSide.addFirst(CreateNewOrderPrice(newOrder));
+            return;
+        }else{
+            for(int i=0; i<orderSide.size();i++)
+            {
+                float currentOrderPrice = orderSide.get(i).orderPrice;
+                if(price==currentOrderPrice){
+                    orderSide.get(i).AddOrder(newOrder);
+                    return;
+                }
+                else if(price<currentOrderPrice){
+                    orderSide.add(i, CreateNewOrderPrice(newOrder));
+                    return;
+                }
+            }
+            orderSide.addLast(CreateNewOrderPrice(newOrder));
         }
 
     }
@@ -155,11 +178,18 @@ public class OrderBook {
         newOrderPrice.SetOrderPrice(newOrder.orderPrice);
         return newOrderPrice;
     }
-    static void PrintOrderList()
+    static void PrintOrderList(LinkedList<OrderPrice> orderSide)
     {
+
+        System.out.println("Buy Orders -------------------------------------------");
         for (OrderPrice orderLine : buyOrderBook) {
             System.out.print(orderLine.orderPrice + ":    ");
-            //System.out.print( " --> "+orderLine.orderPriceList.peek().orderQuantity);
+            orderLine.PrintOrderPriceList();
+            System.out.println();
+        }
+        System.out.println("Sell Orders -------------------------------------------");
+        for (OrderPrice orderLine : sellOrderBook) {
+            System.out.print(orderLine.orderPrice + ":    ");
             orderLine.PrintOrderPriceList();
             System.out.println();
         }
