@@ -35,7 +35,7 @@ public class OrderBook {
         BufferedReader r = new BufferedReader(
                 new InputStreamReader(System.in));
 
-        System.out.print("za.co.entelect.bootcamp.java.Order ID: ");
+        System.out.print("Order ID: ");
         int id = Integer.parseInt(r.readLine());
 
         System.out.print("Quantity change: ");
@@ -44,17 +44,13 @@ public class OrderBook {
         System.out.print("Side: ");
         String side = r.readLine();
 
-        if(side=="Buy"){
-
-        }
         Modify(id, quantity, side);
     }
-
 
     private static void DeleteOrderDetails() throws IOException {
         BufferedReader r = new BufferedReader(
                 new InputStreamReader(System.in));
-        System.out.print("za.co.entelect.bootcamp.java.Order ID: ");
+        System.out.print("Order ID: ");
         int id = Integer.parseInt(r.readLine());
 
         System.out.print("Side: ");
@@ -132,46 +128,50 @@ public class OrderBook {
         PrintOrderList(orderSide);
     }
 
-    public static void Add(Order newOrder, String side){
+    public static void Add(Order newOrder, String side) {
         float price = newOrder.orderPrice;
         LinkedList<OrderPrice> orderSide;
-        if(Objects.equals(newOrder.orderSide, "Buy"))
-        {
-            orderSide=buyOrderBook;
-        }else{
-            orderSide=sellOrderBook;
+        boolean isBuy;
+
+        if(Objects.equals(newOrder.orderSide, "Buy")) {
+            orderSide = buyOrderBook;
+            isBuy = true;
+        } else {
+            orderSide = sellOrderBook;
+            isBuy = false;
         }
-        if(orderSide.isEmpty())
-        {
+
+        if(orderSide.isEmpty()) {
             orderSide.add(CreateNewOrderPrice(newOrder));
             return;
         }
-        if(price>orderSide.getLast().orderPrice)
-        {
-            orderSide.addLast(CreateNewOrderPrice(newOrder));
-            return;
-        }else if(price<orderSide.getFirst().orderPrice)
-        {
+
+        if((isBuy && price > orderSide.getFirst().orderPrice) ||
+                (!isBuy && price < orderSide.getFirst().orderPrice)) {
             orderSide.addFirst(CreateNewOrderPrice(newOrder));
             return;
-        }else{
-            for(int i=0; i<orderSide.size();i++)
-            {
+        } else if((isBuy && price < orderSide.getLast().orderPrice) ||
+                (!isBuy && price > orderSide.getLast().orderPrice)) {
+            orderSide.addLast(CreateNewOrderPrice(newOrder));
+            return;
+        } else {
+            for(int i = 0; i < orderSide.size(); i++) {
                 float currentOrderPrice = orderSide.get(i).orderPrice;
-                if(price==currentOrderPrice){
+
+                if(price == currentOrderPrice) {
                     orderSide.get(i).AddOrder(newOrder);
                     return;
-                }
-                else if(price<currentOrderPrice){
+                } else if((isBuy && price > currentOrderPrice) ||
+                        (!isBuy && price < currentOrderPrice)) {
                     orderSide.add(i, CreateNewOrderPrice(newOrder));
                     return;
                 }
             }
             orderSide.addLast(CreateNewOrderPrice(newOrder));
         }
-
     }
-    static OrderPrice CreateNewOrderPrice(Order newOrder)
+
+    public static OrderPrice CreateNewOrderPrice(Order newOrder)
     {
         OrderPrice newOrderPrice= new OrderPrice();
         newOrderPrice.AddOrder(newOrder);
