@@ -33,7 +33,15 @@ public class OrderPrice {
         //System.out.println(orderPriceList.size());
         for(Order orders: orderPriceList)
         {
-            System.out.print(orders.orderQuantity + " (" + orders.orderId+") "+ " - - > ");
+            //System.out.print(orders.orderQuantity + " (" + orders.orderId+") "+ " - - > ");
+            System.out.print(orders.orderId);
+            System.out.print(" | ");
+            System.out.print(orders.orderPrice);
+            System.out.print(" | ");
+            System.out.print(orders.orderQuantity);
+            System.out.print(" | ");
+            System.out.print(orders.orderDate);
+            System.out.println();
         }
     }
     public Integer FindOrderByID(Integer id){

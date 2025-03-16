@@ -7,9 +7,12 @@ import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.Objects;
 
+
+
 public class OrderBook {
-    private static LinkedList<OrderPrice> buyOrderBook = new LinkedList<OrderPrice>();
-    private static LinkedList<OrderPrice> sellOrderBook = new LinkedList<OrderPrice>();
+    public static LinkedList<OrderPrice> buyOrderBook = new LinkedList<OrderPrice>();
+    public static LinkedList<OrderPrice> sellOrderBook = new LinkedList<OrderPrice>();
+    private static MatchingEngine matchingEngine = new MatchingEngine();
     public static int orderId=0;
 
     public static void main(String[] args) throws IOException {
@@ -28,6 +31,8 @@ public class OrderBook {
                 case "Modify" -> ModifyOrderDetails();
                 case null, default -> System.out.println("Invalid operation");
             }
+            MatchingEngine.FindMatches();
+            PrintOrderList();
         }
     }
 
@@ -58,6 +63,24 @@ public class OrderBook {
 
 
         Delete(id, side);
+        CheckForEmptyPrices();
+    }
+
+    static void CheckForEmptyPrices()
+    {
+        System.out.println("Checking for empty tables");
+        for(OrderPrice orderPrice: buyOrderBook)
+        {
+            if(orderPrice.orderPriceList.isEmpty()){
+                DeleteOrderPrice(buyOrderBook, orderPrice);
+            }
+        }
+        for(OrderPrice orderPrice: sellOrderBook)
+        {
+            if(orderPrice.orderPriceList.isEmpty()){
+                DeleteOrderPrice(sellOrderBook, orderPrice);
+            }
+        }
     }
 
     private static void AddOrderDetails() throws IOException {
@@ -85,7 +108,8 @@ public class OrderBook {
             orderSide=sellOrderBook;
         }
         orderId++;
-        PrintOrderList(orderSide);
+//        PrintOrderList();
+////        MatchingEngine.FindMatches();
     }
 
     public static void Modify(int id, int quantity, String side){
@@ -105,7 +129,8 @@ public class OrderBook {
                 break;
             }
         }
-        PrintOrderList(orderSide);
+//        PrintOrderList();
+////        MatchingEngine.FindMatches();
     }
 
     public static void Delete(int id, String side ) {
@@ -125,7 +150,13 @@ public class OrderBook {
                 break;
             }
         }
-        PrintOrderList(orderSide);
+//        PrintOrderList();
+////        MatchingEngine.FindMatches();
+    }
+
+    public static void DeleteOrderPrice(LinkedList<OrderPrice> orderSide, OrderPrice orderPrice)
+    {
+        orderSide.remove(orderPrice);
     }
 
     public static void Add(Order newOrder, String side) {
@@ -178,18 +209,18 @@ public class OrderBook {
         newOrderPrice.SetOrderPrice(newOrder.orderPrice);
         return newOrderPrice;
     }
-    static void PrintOrderList(LinkedList<OrderPrice> orderSide)
+    static void PrintOrderList()
     {
-
+        System.out.println("*****************************NEW TABLE***************************");
         System.out.println("Buy Orders -------------------------------------------");
         for (OrderPrice orderLine : buyOrderBook) {
-            System.out.print(orderLine.orderPrice + ":    ");
+            //System.out.print(orderLine.orderPrice + ":    ");
             orderLine.PrintOrderPriceList();
             System.out.println();
         }
         System.out.println("Sell Orders -------------------------------------------");
         for (OrderPrice orderLine : sellOrderBook) {
-            System.out.print(orderLine.orderPrice + ":    ");
+            //System.out.print(orderLine.orderPrice + ":    ");
             orderLine.PrintOrderPriceList();
             System.out.println();
         }
