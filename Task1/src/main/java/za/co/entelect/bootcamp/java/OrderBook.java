@@ -49,7 +49,7 @@ public class OrderBook {
         System.out.print("Side: ");
         String side = r.readLine();
 
-        Modify(id, quantity, side);
+        Modify(id, quantity, side, false);
     }
 
     private static void DeleteOrderDetails() throws IOException {
@@ -112,7 +112,7 @@ public class OrderBook {
 ////        MatchingEngine.FindMatches();
     }
 
-    public static void Modify(int id, int quantity, String side){
+    public static void Modify(int id, int quantity, String side, boolean isPartiallyComplete){
         int index = 0;
         LinkedList<OrderPrice> orderSide;
         if(Objects.equals(side, "Buy"))
@@ -126,11 +126,12 @@ public class OrderBook {
             if(index!=-1)
             {
                 orderPrice.ModifyOrder(index, quantity);
+                if(!isPartiallyComplete){
+                    orderPrice.UpdateOrderPriority(index);
+                }
                 break;
             }
         }
-//        PrintOrderList();
-////        MatchingEngine.FindMatches();
     }
 
     public static void Delete(int id, String side ) {
@@ -147,11 +148,20 @@ public class OrderBook {
             if(index!=-1)
             {
                 orderPrice.DeleteOrder(index);
+                if(orderPrice.orderPriceList.isEmpty()){
+                    DeleteEmptyOrderPrice(orderPrice,orderSide);
+                }
+
                 break;
             }
         }
 //        PrintOrderList();
 ////        MatchingEngine.FindMatches();
+    }
+
+    private static void DeleteEmptyOrderPrice(OrderPrice orderPrice, LinkedList<OrderPrice> orderSide)
+    {
+        orderSide.remove(orderPrice);
     }
 
     public static void DeleteOrderPrice(LinkedList<OrderPrice> orderSide, OrderPrice orderPrice)

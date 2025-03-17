@@ -15,6 +15,7 @@ public class OrderPrice {
     public void DeleteOrder(int id)
     {
         orderPriceList.remove(id);
+
     }
     public void ModifyOrder(int id, int quanitiy)
     {
@@ -22,6 +23,9 @@ public class OrderPrice {
         modifiedOrder.orderQuantity=quanitiy;
         modifiedOrder.orderDate= LocalDateTime.now();
 
+    }
+    public void UpdateOrderPriority(int id){
+        Order modifiedOrder = orderPriceList.get(id);
         orderPriceList.remove(id);
         orderPriceList.addLast(modifiedOrder);
     }
