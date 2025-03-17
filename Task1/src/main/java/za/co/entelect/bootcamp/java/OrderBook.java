@@ -12,7 +12,7 @@ import java.util.Objects;
 public class OrderBook {
     public static LinkedList<OrderPrice> buyOrderBook = new LinkedList<OrderPrice>();
     public static LinkedList<OrderPrice> sellOrderBook = new LinkedList<OrderPrice>();
-    private static MatchingEngine matchingEngine = new MatchingEngine();
+    //private static MatchingEngine matchingEngine = new MatchingEngine();
     public static int orderId=0;
 
     public static void main(String[] args) throws IOException {
@@ -108,8 +108,6 @@ public class OrderBook {
             orderSide=sellOrderBook;
         }
         orderId++;
-//        PrintOrderList();
-////        MatchingEngine.FindMatches();
     }
 
     public static void Modify(int id, int quantity, String side, boolean isPartiallyComplete){
@@ -155,8 +153,6 @@ public class OrderBook {
                 break;
             }
         }
-//        PrintOrderList();
-////        MatchingEngine.FindMatches();
     }
 
     private static void DeleteEmptyOrderPrice(OrderPrice orderPrice, LinkedList<OrderPrice> orderSide)
