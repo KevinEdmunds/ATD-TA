@@ -12,7 +12,6 @@ import java.util.Objects;
 public class OrderBook {
     public static LinkedList<OrderPrice> buyOrderBook = new LinkedList<OrderPrice>();
     public static LinkedList<OrderPrice> sellOrderBook = new LinkedList<OrderPrice>();
-    //private static MatchingEngine matchingEngine = new MatchingEngine();
     public static int orderId=0;
 
     public static void main(String[] args) throws IOException {
@@ -217,16 +216,14 @@ public class OrderBook {
     }
     static void PrintOrderList()
     {
-        System.out.println("*****************************NEW TABLE***************************");
-        System.out.println("Buy Orders -------------------------------------------");
+        System.out.println(" ***************************** RESULT ***************************** ");
+        System.out.println("Buy Orders: - - - - - - - - - - - - - - - - - - - - - ");
         for (OrderPrice orderLine : buyOrderBook) {
-            //System.out.print(orderLine.orderPrice + ":    ");
             orderLine.PrintOrderPriceList();
             System.out.println();
         }
-        System.out.println("Sell Orders -------------------------------------------");
+        System.out.println("Sell Orders: - - - - - - - - - - - - - - - - - - - - - ");
         for (OrderPrice orderLine : sellOrderBook) {
-            //System.out.print(orderLine.orderPrice + ":    ");
             orderLine.PrintOrderPriceList();
             System.out.println();
         }

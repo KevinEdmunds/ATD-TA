@@ -1,13 +1,9 @@
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import za.co.entelect.bootcamp.java.Order;
 import za.co.entelect.bootcamp.java.OrderPrice;
-
 import java.time.LocalDateTime;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 
 public class OrderPriceTest {
 
@@ -47,15 +43,32 @@ public class OrderPriceTest {
 
         Order order1 = new Order(1, 100.0f, 10, "Buy", LocalDateTime.now());
         Order order2 = new Order(2, 100.0f, 20, "Buy", LocalDateTime.now());
+
         orderPrice.AddOrder(order1);
         orderPrice.AddOrder(order2);
 
         orderPrice.ModifyOrder(0, 15);
 
         assertEquals(2, orderPrice.orderPriceList.size());
-        assertEquals(15, orderPrice.orderPriceList.getLast().orderQuantity);
-        assertEquals(1, orderPrice.orderPriceList.getLast().orderId);
-        assertEquals(order2, orderPrice.orderPriceList.getFirst());
+        assertEquals(15, orderPrice.orderPriceList.getFirst().orderQuantity);
+        assertEquals(2, orderPrice.orderPriceList.getLast().orderId);
+        assertEquals(order2, orderPrice.orderPriceList.getLast());
+    }
+
+    @Test
+    void testUpdateOrderPriority(){
+        Order order1 = new Order(1, 100f, 10, "Buy" , LocalDateTime.now());
+        Order order2 = new Order(2, 100f, 20, "Buy" , LocalDateTime.now());
+
+        orderPrice.AddOrder(order1);
+        orderPrice.AddOrder(order2);
+
+        orderPrice.UpdateOrderPriority(1);
+
+        assertEquals(2, orderPrice.orderPriceList.size());
+        assertEquals(20, orderPrice.orderPriceList.getLast().orderQuantity);
+        assertEquals(1, orderPrice.orderPriceList.getFirst().orderId);
+        assertEquals(order1, orderPrice.orderPriceList.getFirst());
     }
 
     @Test

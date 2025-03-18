@@ -122,7 +122,7 @@ public class OrderBookTest {
         Order buyOrder = new Order(0, 100.0f, 10, "Buy", LocalDateTime.now());
         OrderBook.Add(buyOrder, "Buy");
 
-        OrderBook.Modify(0, 15, "Buy");
+        OrderBook.Modify(0, 15, "Buy", true);
 
         Field buyOrderBookField = OrderBook.class.getDeclaredField("buyOrderBook");
         buyOrderBookField.setAccessible(true);
