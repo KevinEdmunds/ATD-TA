@@ -25,8 +25,8 @@ public class MatchingEngine {
 
     private static void VerifyOrderCrossover(float maxBid, float minAsk, Order bid, Order ask) {
         if(maxBid >= minAsk){
-            System.out.println("A match should happen here!: " + maxBid + " <= " + minAsk);
             ExecuteOrder(bid, ask);
+            return;
         }
     }
 

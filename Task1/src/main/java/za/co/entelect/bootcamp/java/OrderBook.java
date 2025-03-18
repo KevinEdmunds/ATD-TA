@@ -15,24 +15,28 @@ public class OrderBook {
     public static int orderId=0;
 
     public static void main(String[] args) throws IOException {
-        while(true)
-        {
-            BufferedReader r = new BufferedReader(
+            while(true)
+            {
+                try{
+                    BufferedReader r = new BufferedReader(
                     new InputStreamReader(System.in));
 
-            System.out.println("< - - - - - - - - - - - - - >");
-            System.out.print("Select operation: ");
-            String operation = r.readLine();
+                    System.out.println("< - - - - - - - - - - - - - >");
+                    System.out.print("Select operation: ");
+                    String operation = r.readLine();
 
-            switch (operation) {
-                case "Add" -> AddOrderDetails();
-                case "Delete" -> DeleteOrderDetails();
-                case "Modify" -> ModifyOrderDetails();
-                case null, default -> System.out.println("Invalid operation");
+                    switch (operation) {
+                        case "Add" -> AddOrderDetails();
+                        case "Delete" -> DeleteOrderDetails();
+                        case "Modify" -> ModifyOrderDetails();
+                        case null, default -> System.err.println("Error receiving input - please type \"Add\", \"Modify\", or \"Delete\"");
+                    }
+                    MatchingEngine.FindMatches();
+                    PrintOrderList();
+                }catch (Exception e) {
+                    System.err.println("Error receiving input:  " + e.getMessage());
+                }
             }
-            MatchingEngine.FindMatches();
-            PrintOrderList();
-        }
     }
 
     private static void ModifyOrderDetails() throws IOException{

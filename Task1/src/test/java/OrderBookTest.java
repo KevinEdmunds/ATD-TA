@@ -11,9 +11,6 @@ import java.util.LinkedList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OrderBookTest {
-
-
-
     @BeforeEach
     void resetStaticFields() throws Exception {
         Field buyOrderBookField = OrderBook.class.getDeclaredField("buyOrderBook");
